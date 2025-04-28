@@ -1,132 +1,105 @@
+
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+interface LikesProps {
+  postId: string;
+}
+
+const Likes = ({ postId }: LikesProps) => {
+  const [likesCount, setLikesCount] = useState(0);
+  const [liked, setLiked] = useState(false);
+  const router = useRouter();
+
+  const fetchLikes = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/likes/on/${postId}`, {
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setLikesCount(data.likes.length);
+        setLiked(data.likedByCurrentUser); // <-- Important
+      }
+    } catch (error) {
+      console.error("Failed to fetch likes", error);
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      const method = liked ? "DELETE" : "POST";
+      const response = await fetch(`http://localhost:3000/likes/on/${postId}`, {
+        method,
+        credentials: "include",
+      });
+
+      if (response.status === 401) {
+        router.push("/auth/login");
+        return;
+      }
+
+      if (response.ok) {
+        // Instead of guessing, refetch properly
+        fetchLikes();
+      }
+    } catch (error) {
+      console.error("Error liking the post", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLikes();
+  }, []);
+
+  return (
+    <button
+      onClick={handleLike}
+      className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
+    >
+      {liked ? "Unlike" : "Like"} ({likesCount})
+    </button>
+  );
+};
+
+export default Likes;
+
 // "use client";
 
-// import React, { useEffect, useState } from "react";
-// import { useRouter } from "next/navigation";
+// import React, { useState, useEffect } from "react";
 
 // interface LikesProps {
 //   postId: string;
 // }
 
 // const Likes = ({ postId }: LikesProps) => {
-//   const [likesCount, setLikesCount] = useState(0);
-//   const [liked, setLiked] = useState(false);
-//   const router = useRouter();
-
-//   const fetchLikes = async () => {
-//     try {
-//       const response = await fetch(`http://localhost:3000/likes/on/${postId}`);
-//       if (response.ok) {
-//         const data = await response.json();
-//         setLikesCount(data.likes.length);
-//       }
-//     } catch (error) {
-//       console.error("Failed to fetch likes", error);
-//     }
-//   };
-
-//   const handleLike = async () => {
-//     try {
-//       const method = liked ? "DELETE" : "POST";
-//       const response = await fetch(`http://localhost:3000/likes/on/${postId}`, {
-//         method,
-//         credentials: "include",
-//       });
-
-//       if (response.status === 401) {
-//         router.push("/auth/login");
-//         return;
-//       }
-
-//       if (response.ok) {
-//         setLiked(!liked);
-//         fetchLikes();
-//       }
-//     } catch (error) {
-//       console.error("Error liking the post", error);
-//     }
-//   };
+//   const [likesCount, setLikesCount] = useState<number>(0);
 
 //   useEffect(() => {
+//     const fetchLikes = async () => {
+//       try {
+//         const response = await fetch(`http://localhost:3000/likes/${postId}`);
+//         if (response.ok) {
+//           const data = await response.json();
+//           setLikesCount(data.likesCount);
+//         }
+//       } catch (error) {
+//         console.error("Failed to fetch likes", error);
+//       }
+//     };
+
 //     fetchLikes();
-//   }, []);
+//   }, [postId]);
 
 //   return (
-//     <button
-//       onClick={handleLike}
-//       className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
-//     >
-//       {liked ? "Unlike" : "Like"} ({likesCount})
-//     </button>
+//     <div className="flex items-center gap-1">
+//       <button className="text-sm text-blue-600 hover:underline">👍</button>
+//       <span>{likesCount} Likes</span>
+//     </div>
 //   );
 // };
 
 // export default Likes;
-
-// "use client";
-
-// import React, { useEffect, useState } from "react";
-// import { useRouter } from "next/navigation";
-
-// interface LikesProps {
-//   postId: string;
-// }
-
-// const Likes = ({ postId }: LikesProps) => {
-//   const [likesCount, setLikesCount] = useState(0);
-//   const [liked, setLiked] = useState(false);
-//   const router = useRouter();
-
-//   const fetchLikes = async () => {
-//     try {
-//       const response = await fetch(`http://localhost:3000/likes/on/${postId}`, {
-//         credentials: "include",
-//       });
-
-//       if (response.ok) {
-//         const data = await response.json();
-//         setLikesCount(data.likes.length);
-//         setLiked(data.likedByCurrentUser); // <-- Important
-//       }
-//     } catch (error) {
-//       console.error("Failed to fetch likes", error);
-//     }
-//   };
-
-//   const handleLike = async () => {
-//     try {
-//       const method = liked ? "DELETE" : "POST";
-//       const response = await fetch(`http://localhost:3000/likes/on/${postId}`, {
-//         method,
-//         credentials: "include",
-//       });
-
-//       if (response.status === 401) {
-//         router.push("/auth/login");
-//         return;
-//       }
-
-//       if (response.ok) {
-//         // Instead of guessing, refetch properly
-//         fetchLikes();
-//       }
-//     } catch (error) {
-//       console.error("Error liking the post", error);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchLikes();
-//   }, []);
-
-//   return (
-//     <button
-//       onClick={handleLike}
-//       className="flex items-center gap-2 text-sm text-blue-600 hover:underline"
-//     >
-//       {liked ? "Unlike" : "Like"} ({likesCount})
-//     </button>
-//   );
-// };
-
-// export default Likes;
-
