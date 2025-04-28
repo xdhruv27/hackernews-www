@@ -1,7 +1,11 @@
-import React from "react";
+
+import React from 'react'
+import PostList from './pages/PostsLists'
 
 const RootPage = () => {
-  return <div>RootPage</div>;
-};
+  return (
+    <PostList />
+  )
+}
 
-export default RootPage;
+export default RootPage
