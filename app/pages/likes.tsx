@@ -88,7 +88,7 @@ const Likes = ({ postId }: LikesProps) => {
   const fetchLikes = useCallback(async () => {
     try {
       const response = await fetch(`https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/likes/on/${postId}`, {
- 
+         method : "GET",
       });
 
       if (response.ok) {
