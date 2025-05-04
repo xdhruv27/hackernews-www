@@ -24,10 +24,9 @@
 //   useEffect(() => {
 //     const fetchComments = async () => {
 //       try {
-//         const response = await fetch("http://localhost:3000/comments/me", {
-//           method : "GET",
+//         const response = await fetch("https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/comments/me", {
+//           method: "GET",
 //           credentials: "include", // important if you need to send cookies/session
-     
 //         });
 //         if (!response.ok) {
 //           if (response.status === 404) {
@@ -38,8 +37,12 @@
 //         }
 //         const data = await response.json();
 //         setComments(data.comments); // Assuming API returns { comments: [...] }
-//       } catch (err: any) {
-//         setError(err.message || "Something went wrong.");
+//       } catch (err: unknown) {
+//         if (err instanceof Error) {
+//           setError(err.message || "Something went wrong.");
+//         } else {
+//           setError("Something went wrong.");
+//         }
 //       } finally {
 //         setIsLoading(false);
 //       }
@@ -47,6 +50,11 @@
 
 //     fetchComments();
 //   }, []);
+
+//   const formatDate = (dateString: string) => {
+//     const date = new Date(dateString);
+//     return date.toLocaleString([], { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
+//   };
 
 //   if (isLoading) {
 //     return <div className="text-center text-gray-600 mt-10">Loading comments...</div>;
@@ -57,7 +65,16 @@
 //   }
 
 //   if (comments.length === 0) {
-//     return <div className="text-center text-gray-600 mt-10">No comments yet.</div>;
+//     return (
+//       <div className="text-center text-gray-600 mt-10">
+//         No comments yet.
+//         <div className="mt-4">
+//           <Link href="/" className="text-blue-600 hover:underline">
+//             Browse Posts
+//           </Link>
+//         </div>
+//       </div>
+//     );
 //   }
 
 //   return (
@@ -82,7 +99,7 @@
 //           </div>
 //           <p className="text-gray-800">{comment.content}</p>
 //           <div className="text-xs text-gray-400 mt-2">
-//             {new Date(comment.createdAt).toLocaleString()}
+//             {formatDate(comment.createdAt)}
 //           </div>
 //         </div>
 //       ))}
@@ -97,6 +114,8 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { betterAuthClient } from "@/lib/integrations/better-auth";
 
 interface Comment {
   id: string;
@@ -114,15 +133,37 @@ interface Comment {
 const UserCommentsPage = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sessionLoading, setSessionLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
+  const { data: session } = betterAuthClient.useSession();
+
+  useEffect(() => {
+    // Simulate loading while session is being resolved
+    if (session === null) {
+      setSessionLoading(false);
+    } else if (session?.user) {
+      setSessionLoading(false);
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (!sessionLoading && !session?.user) {
+      router.replace("/login");
+    }
+  }, [sessionLoading, session, router]);
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await fetch("https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/comments/me", {
-          method: "GET",
-          credentials: "include", // important if you need to send cookies/session
-        });
+        const response = await fetch(
+          "https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/comments/me",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (!response.ok) {
           if (response.status === 404) {
             setComments([]);
@@ -131,7 +172,7 @@ const UserCommentsPage = () => {
           throw new Error("Failed to fetch comments.");
         }
         const data = await response.json();
-        setComments(data.comments); // Assuming API returns { comments: [...] }
+        setComments(data.comments);
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message || "Something went wrong.");
@@ -143,16 +184,38 @@ const UserCommentsPage = () => {
       }
     };
 
-    fetchComments();
-  }, []);
+    if (session?.user) {
+      fetchComments();
+    }
+  }, [session]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleString([], { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    return date.toLocaleString([], {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
-  if (isLoading) {
-    return <div className="text-center text-gray-600 mt-10">Loading comments...</div>;
+  if (sessionLoading || isLoading) {
+    return (
+      <div className="text-center text-gray-600 mt-10">Loading comments...</div>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <div className="text-center text-gray-600 mt-10">
+        Please{" "}
+        <Link href="/login" className="text-blue-600 hover:underline">
+          login
+        </Link>{" "}
+        to view your comments.
+      </div>
+    );
   }
 
   if (error) {
