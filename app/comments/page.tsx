@@ -109,7 +109,6 @@
 
 // export default UserCommentsPage;
 
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -140,19 +139,10 @@ const UserCommentsPage = () => {
   const { data: session } = betterAuthClient.useSession();
 
   useEffect(() => {
-    // Simulate loading while session is being resolved
-    if (session === null) {
-      setSessionLoading(false);
-    } else if (session?.user) {
+    if (session === null || session?.user) {
       setSessionLoading(false);
     }
   }, [session]);
-
-  useEffect(() => {
-    if (!sessionLoading && !session?.user) {
-      router.replace("/login");
-    }
-  }, [sessionLoading, session, router]);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -208,12 +198,18 @@ const UserCommentsPage = () => {
 
   if (!session?.user) {
     return (
-      <div className="text-center text-gray-600 mt-10">
-        Please{" "}
-        <Link href="/login" className="text-blue-600 hover:underline">
-          login
-        </Link>{" "}
-        to view your comments.
+      <div className="flex items-center justify-center min-h-screen bg-[#F1F1DB]">
+        <div className="text-center p-8 bg-white rounded-2xl shadow-md">
+          <h2 className="text-2xl font-bold mb-4 text-red-600">
+            You must be logged in to view your comments!
+          </h2>
+          <button
+            onClick={() => router.push("/login")}
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+          >
+            Go to Login
+          </button>
+        </div>
       </div>
     );
   }
@@ -266,3 +262,4 @@ const UserCommentsPage = () => {
 };
 
 export default UserCommentsPage;
+
