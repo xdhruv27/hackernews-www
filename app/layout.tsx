@@ -11,7 +11,7 @@ export const metadata = {
 
 const  RootLayout = (props : PropsWithChildren) => {
   return (
-    <html lang="en">
+    <html lang="en"  suppressHydrationWarning >
       <body >
           <Navbar />
         <main className="p-4 max-w-3xl mx-auto">{props.children}</main>

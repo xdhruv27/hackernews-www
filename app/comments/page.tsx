@@ -25,7 +25,9 @@ const UserCommentsPage = () => {
     const fetchComments = async () => {
       try {
         const response = await fetch("http://localhost:3000/comments/me", {
+          method : "GET",
           credentials: "include", // important if you need to send cookies/session
+     
         });
         if (!response.ok) {
           if (response.status === 404) {

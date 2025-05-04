@@ -112,7 +112,7 @@ const NavigationBar = ({ hideNavItems = false }: NavigationBarProps) => {
   }
 
   return (
-    <nav className="w-full bg-amber-600 text-white flex items-center justify-between px-6 py-3 shadow-md">
+    <nav className="w-full bg-green-400 text-white flex items-center justify-between px-6 py-3 shadow-md">
       {/* Left side - Logo and navigation links */}
       <div className="flex items-center space-x-6">
         <Link href="/" className="text-xl font-bold hover:text-amber-300">
@@ -136,7 +136,13 @@ const NavigationBar = ({ hideNavItems = false }: NavigationBarProps) => {
 
       {/* Right side - Auth buttons */}
       <div className="flex items-center space-x-4 text-sm">
-        <div className="border-r border-black px-2">{data?.user.username}</div>
+        <div className="border-r border-black px-2">
+          
+        <Link href="/user" className="hover:text-amber-300">
+      {data?.user.username}
+    </Link>
+
+        </div>
         <div>
           {!data?.user ? (
             <Link href="/auth/login" className="hover:text-amber-300">

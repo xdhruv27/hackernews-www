@@ -1,10 +1,13 @@
+
+
 // "use client";
 
 // import React, { useEffect, useState } from "react";
 // import Link from "next/link";
+
+// import { useRouter } from "next/navigation";
 // import Likes from "./likes";
 // import Comments from "./comments";
-// import { useRouter } from "next/navigation";
 
 // interface Post {
 //   id: string;
@@ -19,7 +22,7 @@
 //   const [posts, setPosts] = useState<Post[]>([]);
 //   const [isLoading, setIsLoading] = useState(true);
 //   const [error, setError] = useState<string | null>(null);
-//   const router = useRouter();
+
 
 //   useEffect(() => {
 //     const fetchPosts = async () => {
@@ -55,16 +58,15 @@
 //   return (
 //     <div className="max-w-3xl mx-auto mt-6 space-y-8">
 //       {posts.map((post) => (
-//         <div
-//           key={post.id}
-//           className="border rounded-lg p-6 shadow hover:shadow-md transition"
-//         >
+//         <div key={post.id} className="border rounded-lg p-6 shadow hover:shadow-md transition">
 //           <Link href={`/posts/${post.id}`} className="text-xl font-bold text-blue-700 hover:underline">
 //             {post.title}
 //           </Link>
 //           <p className="mt-2 text-gray-700">{post.content}</p>
 //           <div className="text-sm text-gray-500 mt-2">
-//             Posted on {new Date(post.createdAt).toLocaleDateString()}
+//             Posted on {typeof window !== "undefined"
+//   ? new Date(post.createdAt).toLocaleDateString()
+//   : new Date(post.createdAt).toISOString().split("T")[0]}
 //           </div>
 
 //           <div className="mt-4 flex gap-4 items-center">
@@ -85,8 +87,6 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-
-import { useRouter } from "next/navigation";
 import Likes from "./likes";
 import Comments from "./comments";
 
@@ -95,15 +95,14 @@ interface Post {
   title: string;
   content: string;
   userId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string; // should be string from API
+  updatedAt: string;
 }
 
 const PostList = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -145,7 +144,16 @@ const PostList = () => {
           </Link>
           <p className="mt-2 text-gray-700">{post.content}</p>
           <div className="text-sm text-gray-500 mt-2">
-            Posted on {new Date(post.createdAt).toLocaleDateString()}
+            Posted on{" "}
+            {new Date(post.createdAt).toLocaleString("en-IN", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+              timeZone: "Asia/Kolkata",
+            })}
           </div>
 
           <div className="mt-4 flex gap-4 items-center">

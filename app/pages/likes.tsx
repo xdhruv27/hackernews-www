@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -66,40 +65,3 @@ const Likes = ({ postId }: LikesProps) => {
 };
 
 export default Likes;
-
-// "use client";
-
-// import React, { useState, useEffect } from "react";
-
-// interface LikesProps {
-//   postId: string;
-// }
-
-// const Likes = ({ postId }: LikesProps) => {
-//   const [likesCount, setLikesCount] = useState<number>(0);
-
-//   useEffect(() => {
-//     const fetchLikes = async () => {
-//       try {
-//         const response = await fetch(`http://localhost:3000/likes/${postId}`);
-//         if (response.ok) {
-//           const data = await response.json();
-//           setLikesCount(data.likesCount);
-//         }
-//       } catch (error) {
-//         console.error("Failed to fetch likes", error);
-//       }
-//     };
-
-//     fetchLikes();
-//   }, [postId]);
-
-//   return (
-//     <div className="flex items-center gap-1">
-//       <button className="text-sm text-blue-600 hover:underline">👍</button>
-//       <span>{likesCount} Likes</span>
-//     </div>
-//   );
-// };
-
-// export default Likes;
