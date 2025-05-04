@@ -119,7 +119,7 @@ const UserCommentsPage = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await fetch("http://localhost:3000/comments/me", {
+        const response = await fetch("https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/comments/me", {
           method: "GET",
           credentials: "include", // important if you need to send cookies/session
         });

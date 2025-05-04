@@ -173,7 +173,7 @@ const Comments = ({ postId }: CommentsProps) => {
 
   const fetchComments = useCallback(async () => {
     try {
-      const response = await fetch(`http://localhost:3000/comments/on/${postId}`);
+      const response = await fetch(`https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/comments/on/${postId}`);
       if (response.ok) {
         const data = await response.json();
         setComments(data.comments);
@@ -189,7 +189,7 @@ const Comments = ({ postId }: CommentsProps) => {
 
   const handleAddComment = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/comments/on/${postId}`, {
+      const response = await fetch(`https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/comments/on/${postId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -218,7 +218,7 @@ const Comments = ({ postId }: CommentsProps) => {
 
   const handleDeleteComment = async (commentId: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/comments/${commentId}`, {
+      const response = await fetch(`https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/comments/${commentId}`, {
         method: "DELETE",
         credentials: "include",
       });

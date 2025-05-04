@@ -142,7 +142,7 @@ const CreatePostPage = () => {
     }
     setIsSubmitting(true);
     try {
-      const res = await fetch("http://localhost:3000/posts", {
+      const res = await fetch("https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

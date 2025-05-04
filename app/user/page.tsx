@@ -173,7 +173,7 @@ const UserProfilePage = () => {
       if (!data?.user?.id) return;
 
       try {
-        const res = await fetch(`http://localhost:3000/users/me`, {
+        const res = await fetch(`https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/users/me`, {
           method: "GET",
           credentials: "include",
         });

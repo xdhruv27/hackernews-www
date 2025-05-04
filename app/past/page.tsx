@@ -116,7 +116,7 @@ const PastPostsPage = () => {
   useEffect(() => {
     const fetchPastPosts = async () => {
       try {
-        const response = await fetch("http://localhost:3000/posts", {
+        const response = await fetch("https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/posts", {
           credentials: "include",
         });
 
