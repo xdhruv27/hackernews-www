@@ -21,27 +21,69 @@ const SignUpPage = () => {
       [e.target.name]: e.target.value,
     }));
   };
+  // const handleSignUp = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await betterAuthClient.signUp.email({
+  //       username: formData.username,
+  //       email: formData.email,
+  //       name: formData.name,
+  //       password: formData.password,
+  //     });
+  //     if ('user' in response && response.user) {
+  //       router.push("/");
+  //     } else {
+  //       alert(  response.error || "Signup failed. Please try again.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Signup error:", error);
+  //     alert("An error occurred during signup. Please try again.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleSignUp = async () => {
     setIsLoading(true);
     try {
-      const response = await betterAuthClient.signUp.email({
-        username: formData.username,
-        email: formData.email,
-        name: formData.name,
-        password: formData.password,
-      });
-      if ('user' in response && response.user) {
-        router.push("/");
-      } else {
-        alert(  response.error || "Signup failed. Please try again.");
+      const data = await betterAuthClient.getSession();
+      console.log(data);
+
+      const { error } = await betterAuthClient.signUp.email(
+        {
+          username: formData.username,
+          email: formData.email,
+          name: formData.name,
+          password: formData.password,
+         
+        },
+        {
+          onRequest: () => {
+            setIsLoading(true);
+          },
+          onSuccess: () => {
+            setIsLoading(false);
+            router.push("/"); // or wherever you want to redirect after signup
+          },
+          onError: (ctx) => {
+            setIsLoading(false);
+            alert(ctx.error.message || "Signup failed. Please try again.");
+          },
+        }
+      );
+
+      if (error) {
+        alert(error.message || "Signup failed. Please try again.");
       }
-    } catch (error) {
-      console.error("Signup error:", error);
-      alert("An error occurred during signup. Please try again.");
+    } catch {
+      console.error("Signup error:");
+      alert("An unexpected error occurred.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  
   return (
     <>
       <NavigationBar hideNavItems />
@@ -109,7 +151,7 @@ const SignUpPage = () => {
               </button>
               <div className="text-center text-sm mt-4">
                 Already have an account?{" "}
-                <Link href="/auth/login" className="text-blue-600 hover:underline">
+                <Link href="/login" className="text-blue-600 hover:underline">
                   Log In
                 </Link>
               </div>

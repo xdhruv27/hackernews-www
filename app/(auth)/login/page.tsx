@@ -79,7 +79,7 @@ const LoginPage = () => {
                 <span className="text-black">
                   Don&apos;t have an account?&nbsp;
                 </span>
-                <Link href="/auth/sign-up" className="text-blue-600 hover:underline">
+                <Link href="/sign-up" className="text-blue-600 hover:underline">
                   Create account
                 </Link>
               </div>

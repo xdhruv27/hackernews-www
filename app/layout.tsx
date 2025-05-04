@@ -2,7 +2,7 @@
 import Navbar from '@/components/Navbar';
 import './globals.css';
 
-import { PropsWithChildren, ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 
 export const metadata = {
   title: 'Hacker News',
@@ -11,7 +11,7 @@ export const metadata = {
 
 const  RootLayout = (props : PropsWithChildren) => {
   return (
-    <html lang="en"  suppressHydrationWarning >
+    <html lang="en"  >
       <body >
           <Navbar />
         <main className="p-4 max-w-3xl mx-auto">{props.children}</main>
