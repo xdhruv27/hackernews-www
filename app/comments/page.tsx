@@ -139,7 +139,7 @@ const UserCommentsPage = () => {
   const { data: session } = betterAuthClient.useSession();
 
   useEffect(() => {
-    if (session === null || session?.user) {
+    if (session !== undefined) {
       setSessionLoading(false);
     }
   }, [session]);
@@ -190,7 +190,7 @@ const UserCommentsPage = () => {
     });
   };
 
-  if (sessionLoading || isLoading) {
+  if (sessionLoading) {
     return (
       <div className="text-center text-gray-600 mt-10">Loading comments...</div>
     );
@@ -211,6 +211,12 @@ const UserCommentsPage = () => {
           </button>
         </div>
       </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="text-center text-gray-600 mt-10">Loading comments...</div>
     );
   }
 
@@ -262,4 +268,3 @@ const UserCommentsPage = () => {
 };
 
 export default UserCommentsPage;
-
