@@ -182,7 +182,7 @@ const CreatePostPage = () => {
         <div className="text-center p-8 bg-white rounded-2xl shadow-md">
           <h2 className="text-2xl font-bold mb-4 text-red-600">You must be logged in to create a post!</h2>
           <button
-            onClick={() => router.push("/auth/login")}
+            onClick={() => router.push("/login")}
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
           >
             Go to Login
