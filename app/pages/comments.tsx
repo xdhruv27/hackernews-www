@@ -173,7 +173,9 @@ const Comments = ({ postId }: CommentsProps) => {
 
   const fetchComments = useCallback(async () => {
     try {
-      const response = await fetch(`https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/comments/on/${postId}`);
+      const response = await fetch(`https://hackernews.kindbay-5679c40b.centralindia.azurecontainerapps.io/comments/on/${postId}` ,{
+        credentials: "include",
+      });
       if (response.ok) {
         const data = await response.json();
         setComments(data.comments);
